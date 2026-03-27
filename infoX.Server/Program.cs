@@ -1,41 +1,35 @@
+using infoX.Infrastructure.Data.Context;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// --- 1. CONFIGURAÇÃO DE SERVIÇOS (Tudo que usa 'builder.Services') ---
+
+builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+
+// Pega a string de conexão
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Configura o Entity Framework (DEVE VIR ANTES DO BUILD)
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(connectionString));
+
+// --- 2. CONSTRUÇÃO DO APP ---
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// --- 3. MIDDLEWARES (Tudo que usa 'app.') ---
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwaggerUI(options =>
+        options.SwaggerEndpoint("/openapi/v1.json", "infoX API"));
 }
 
 app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.UseAuthorization();
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
