@@ -1,0 +1,6 @@
+@infoX.Server_HostAddress = http://localhost:5177
+
+GET {{infoX.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

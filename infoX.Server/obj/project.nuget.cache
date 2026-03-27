@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "AXjATFtogks=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\augus\\OneDrive\\Documentos\\GitHub\\infoX\\infoX.Server\\infoX.Server.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\augus\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.5\\microsoft.aspnetcore.openapi.10.0.5.nupkg.sha512",
+    "C:\\Users\\augus\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
