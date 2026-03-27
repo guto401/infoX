@@ -9,12 +9,12 @@ $POSTGRES_DB = "infoX_db"
 $ROOT_PATH = Get-Location
 $DB_PATH = Join-Path $ROOT_PATH "database"
 
-# 1. Garante que a pasta está limpa (importante pelo erro anterior!)
-if (Test-Path $DB_PATH) {
-    Write-Host "Limpando pasta database antiga..." -ForegroundColor Yellow
-    Remove-Item -Recurse -Force $DB_PATH
-}
-New-Item -ItemType Directory -Path $DB_PATH | Out-Null
+# # 1. Garante que a pasta está limpa (importante pelo erro anterior!)
+# if (Test-Path $DB_PATH) {
+#     Write-Host "Limpando pasta database antiga..." -ForegroundColor Yellow
+#     Remove-Item -Recurse -Force $DB_PATH
+# }
+#New-Item -ItemType Directory -Path $DB_PATH | Out-Null
 
 Write-Host "--- Iniciando PostgreSQL Alpine ---" -ForegroundColor Cyan
 
