@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/infoX.Server/">
+    <Project Path="infoX.Server/infoX.Application/infoX.Application.csproj" />
+    <Project Path="infoX.Server/infoX.Domain/infoX.Domain.csproj" />
+    <Project Path="infoX.Server/infoX.Infrastructure.Data/infoX.Infrastructure.Data.csproj" />
+  </Folder>
+  <Project Path="infoX.Agent/infoX.Agent.csproj" />
+  <Project Path="infoX.Server/infoX.Server.csproj" />
+</Solution>
