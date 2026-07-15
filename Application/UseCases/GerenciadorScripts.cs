@@ -24,7 +24,6 @@ public class GerenciadorScripts
         }
     }
 
-    // Lê a pasta em tempo real (Sem latência, sem precisar sincronizar banco)
     public IEnumerable<string> ListarScriptsDisponiveis()
     {
         return Directory.GetFiles(_diretorioScripts, "*.cs")
