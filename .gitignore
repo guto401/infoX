@@ -2,6 +2,8 @@
 [Bb]in/
 [Oo]bj/
 [Log]s/
+[De]bug/
+[O]bj/
 *.suo
 *.user
 *.userosscache
@@ -63,3 +65,7 @@ Desktop.ini
 .env.*
 !.env.example
 *.db
+infoX.db-shm
+infoX.db-wal
+/Domain/obj
+/Domain/obj/Debug

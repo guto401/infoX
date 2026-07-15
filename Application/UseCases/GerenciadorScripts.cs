@@ -2,6 +2,7 @@
 using Application.Models;
 using Domain.Entities;
 using Domain.Enums;
+using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 
 namespace Application.UseCases;
@@ -51,7 +52,13 @@ public class GerenciadorScripts
 
         try
         {
-            string comandoPowershell = await CSharpScript.EvaluateAsync<string>(conteudoScript);
+            // Ensinamos o Roslyn a reconhecer os comandos de Sistema e Pastas
+            var opcoes = ScriptOptions.Default
+                .AddReferences(typeof(System.IO.Path).Assembly, typeof(AppContext).Assembly)
+                .AddImports("System", "System.IO");
+
+            // Executamos com as opções
+            string comandoPowershell = await CSharpScript.EvaluateAsync<string>(conteudoScript, opcoes);
 
             // Passa para o executor burro rodar no PowerShell
             resultado = await _executor.ExecutarAsync(comandoPowershell, onLineRead);

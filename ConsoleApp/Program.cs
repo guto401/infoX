@@ -46,6 +46,13 @@ class Program
             return; // Encerra a instância atual que não tem poderes
         }
 
+        // Verificando versão do projeto
+        var versaoInfoX = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3);
+
+        // Forçando o terminal a usar UTF-8
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        Console.InputEncoding = System.Text.Encoding.UTF8;
+
         // 1. Configuração da Injeção de Dependência (O "Coração" da Onion)
         var services = new ServiceCollection();
 
@@ -66,10 +73,11 @@ class Program
         // 2. Interface Visual - Cabeçalho InfoX
         AnsiConsole.Clear();
         AnsiConsole.Write(
-            new FigletText("InfoX Admin")
+            new FigletText("InfoX")
                 .LeftJustified()
                 .Color(Color.Blue));
-        AnsiConsole.Write(new Rule("[yellow]Sistema de Automação e Suporte[/]").RuleStyle("grey").LeftJustified());
+        AnsiConsole.Write(new Rule($"[yellow]Sistema de Automação e Suporte - v{versaoInfoX}[/]").RuleStyle("grey").LeftJustified());
+        AnsiConsole.Write(new Align(new Markup("[grey]by: @guto_marmiroli[/]"), HorizontalAlignment.Right));
         AnsiConsole.WriteLine();
 
 
