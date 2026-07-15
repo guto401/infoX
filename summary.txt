@@ -1,0 +1,37 @@
+infoX/
+│
+├── src/
+│   │
+│   ├── infoX.Domain/
+│   │   ├── Entities/
+│   │   │   ├── Usuario.cs            # Entidade que representa o usuário
+│   │   │   └── Comando.cs            # Entidade que representa o script/comando salvo
+│   │   └── infoX.Domain.csproj
+│   │
+│   ├── infoX.Application/
+│   │   ├── Interfaces/
+│   │   │   ├── IRepository.cs        # Interface genérica ou específica para persistência
+│   │   │   └── IExecutorBurro.cs     # O contrato do nosso executor
+│   │   ├── Security/
+│   │   │   └── Argon2Helper.cs       # Classe que calcula e valida o hash Argon2id
+│   │   ├── UseCases/
+│   │   │   ├── ServicoAutenticacao.cs # Lógica de login (Usa IRepository + Argon2Helper)
+│   │   │   └── GerenciadorComando.cs  # Lógica de salvar/buscar e mandar rodar o comando
+│   │   └── infoX.Application.csproj
+│   │
+│   ├── infoX.Infrastructure/
+│   │   ├── Context/
+│   │   │   └── AppDbContext.cs # Cria o arquivo .db e as tabelas na primeira execução
+│   │   ├── Repositories/
+│   │   │   └── SqliteRepository.cs    # Agora usa o AppDbContext em vez de código SQL bruto
+│   │   ├── Services/
+│   │   │   └── ExecutorPowerShell.cs  # Implementa IExecutorBurro abrindo o powershell.exe
+│   │   └── infoX.Infrastructure.csproj
+│   │
+│   └── infoX.ConsoleApp/
+│       ├── UI/
+│       │   ├── LoginScreen.cs         # Tela de login estilizada com Spectre.Console
+│       │   └── MenuScreen.cs          # Menu de seleção de comandos e exibição de logs
+│       ├── Program.cs                 # Ponto de entrada (onde configuramos a Injeção de Dependência)
+│       └── infoX.ConsoleApp.csproj
+│
