@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Application.Models;
 using Domain.Entities;
 using Domain.Enums;
 
@@ -24,11 +25,15 @@ public class GerenciadorScripts
         }
     }
 
-    public IEnumerable<string> ListarScriptsDisponiveis()
+    public IEnumerable<ScriptLido> ListarScriptsDisponiveis()
     {
-        return Directory.GetFiles(_diretorioScripts, "*.cs")
-                        .Select(Path.GetFileName)
-                        .Where(name => name != null)!;
+        var arquivos = Directory.GetFiles(_diretorioScripts, "*.cs");
+
+        return arquivos.Select(caminho => new ScriptLido
+        {
+            NomeArquivo = Path.GetFileName(caminho),
+            CaminhoCompleto = caminho
+        });
     }
 
     public async Task<string> ExecutarScriptFisicoAsync(string nomeArquivo, Action<string>? onLineRead = null)
@@ -38,7 +43,7 @@ public class GerenciadorScripts
         if (!File.Exists(caminhoCompleto))
             throw new FileNotFoundException($"O script '{nomeArquivo}' sumiu da pasta física!");
 
-        // Lê o código .cs que chama o Process do cmd.exe que você já tem pronto
+        // Lê o código do .cs
         string conteudoScript = await File.ReadAllTextAsync(caminhoCompleto);
 
         string resultado = string.Empty;
@@ -49,7 +54,7 @@ public class GerenciadorScripts
             // Passa para o executor burro rodar no PowerShell
             resultado = await _executor.ExecutarAsync(conteudoScript, onLineRead);
 
-            if (resultado.Contains("[Erro no CMD]") || resultado.Contains("[ERRO]"))
+            if (resultado.Contains("[ERRO]") || resultado.Contains("[Exception]"))
             {
                 status = StatusEnum.Erro;
             }
@@ -61,8 +66,15 @@ public class GerenciadorScripts
         }
         finally
         {
-            // Salva o histórico no SQLite para auditoria posterior
-            var historico = new HistoricoExecucao(nomeArquivo, status, resultado);
+            // Independente de dar certo ou errado, salvamos no SQLite (Auditoria)
+            var historico = new HistoricoExecucao
+            {
+                NomeScript = nomeArquivo,
+                DataExecucao = DateTime.Now,
+                Status = status,
+                OutputLog = resultado
+            };
+
             await _historicoRepository.SalvarAsync(historico);
         }
 
