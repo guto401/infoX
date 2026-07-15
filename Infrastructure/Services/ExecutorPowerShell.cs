@@ -16,7 +16,7 @@ public class ExecutorPowerShell : IExecutorBurro
             FileName = "powershell.exe",
             // -NoProfile pula o carregamento de configurações do usuário (ganho bruto de velocidade)
             // -Command diz ao PS para executar a instrução literal que enviamos
-            Arguments = $"-NoProfile -NonInteractive -Command \"{scriptConteudo.Replace("\"", "\\\"")}\"",
+            Arguments = $"-NoProfile -NonInteractive -Command \"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; {scriptConteudo.Replace("\"", "\\\"")}\"",
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
