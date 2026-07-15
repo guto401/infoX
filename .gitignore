@@ -1,0 +1,64 @@
+## Core .NET Build and Release Outputs
+[Bb]in/
+[Oo]bj/
+[Log]s/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## VS Code Configuration
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/snippets/
+
+## Visual Studio Cache and Temporary Files
+.vs/
+Generated%20Files/
+_ReSharper*/
+*.[Cc]ache
+*.openeddf
+*.opendb
+*.shared
+*.tlog
+*.log
+*.ilk
+*.meta
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.SBR
+*.sbr
+*.xml
+
+## Paket CLI
+.paket/
+paket-files/
+
+## MyGet Automation
+app.config
+
+## Azure Resource Manager (ARM) Azure Functions local settings
+local.settings.json
+
+## Rider / JetBrains IDEs
+.idea/
+*.sln.iml
+
+## macOS System Files
+.DS_Store
+
+## Windows System Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+## User-specific / Local Environment Secrets
+*.usersecrets
+.env
+.env.*
+!.env.example
