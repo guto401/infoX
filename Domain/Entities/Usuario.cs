@@ -6,6 +6,8 @@
         public string Nome { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
 
+        public Usuario() { }
+
         public Usuario(string nome, string passwordHash)
         {
             nome = Nome;

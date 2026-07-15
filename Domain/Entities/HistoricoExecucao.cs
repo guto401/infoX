@@ -9,6 +9,8 @@ namespace Domain.Entities
         public StatusEnum Status { get; set; }
         public string OutputLog { get; set; } = string.Empty;
 
+        public HistoricoExecucao() { }
+
         public HistoricoExecucao(string nome, StatusEnum status, string resultado)
         {
             nome = NomeScript;

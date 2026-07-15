@@ -2,7 +2,7 @@
 using Domain.Entities;
 using Domain.Enums;
 
-namespace MeuProjeto.Application.UseCases;
+namespace Application.UseCases;
 
 public class GerenciadorScripts
 {
