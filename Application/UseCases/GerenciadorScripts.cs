@@ -2,6 +2,7 @@
 using Application.Models;
 using Domain.Entities;
 using Domain.Enums;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
 
 namespace Application.UseCases;
 
@@ -45,14 +46,15 @@ public class GerenciadorScripts
 
         // Lê o código do .cs
         string conteudoScript = await File.ReadAllTextAsync(caminhoCompleto);
-
         string resultado = string.Empty;
         StatusEnum status = StatusEnum.Concluido;
 
         try
         {
+            string comandoPowershell = await CSharpScript.EvaluateAsync<string>(conteudoScript);
+
             // Passa para o executor burro rodar no PowerShell
-            resultado = await _executor.ExecutarAsync(conteudoScript, onLineRead);
+            resultado = await _executor.ExecutarAsync(comandoPowershell, onLineRead);
 
             if (resultado.Contains("[ERRO]") || resultado.Contains("[Exception]"))
             {

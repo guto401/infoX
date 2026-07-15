@@ -6,6 +6,12 @@ using Infrastructure.Context;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Application.Models;
+using Microsoft.EntityFrameworkCore;
+using Domain.Entities;
+using Application.Security;
+
+using System.Diagnostics;
+using System.Security.Principal;
 
 namespace ConsoleApp;
 
@@ -13,6 +19,33 @@ class Program
 {
     static async Task Main(string[] args)
     {
+        // Verificando UAC
+        WindowsIdentity identity = WindowsIdentity.GetCurrent();
+        WindowsPrincipal principal = new WindowsPrincipal(identity);
+        bool isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
+
+        if (!isAdmin)
+        {
+            ProcessStartInfo startInfo = new ProcessStartInfo
+            {
+                FileName = Environment.ProcessPath,
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+
+            try
+            {
+                Process.Start(startInfo);
+            }
+            catch
+            {
+                Console.WriteLine("O usuário recusou a permissão de administrador.");
+                Thread.Sleep(2000);
+            }
+
+            return; // Encerra a instância atual que não tem poderes
+        }
+
         // 1. Configuração da Injeção de Dependência (O "Coração" da Onion)
         var services = new ServiceCollection();
 
@@ -38,6 +71,22 @@ class Program
                 .Color(Color.Blue));
         AnsiConsole.Write(new Rule("[yellow]Sistema de Automação e Suporte[/]").RuleStyle("grey").LeftJustified());
         AnsiConsole.WriteLine();
+
+
+        var usuarioRepo = serviceProvider.GetRequiredService<IUsuarioRepository>();
+        bool temUsuario = await usuarioRepo.ExisteAlgumUsuarioAsync();
+
+        if (!temUsuario)
+        {
+            // Se não tem ninguém no banco, criamos o admin supremo
+            var usuarioAdmin = new Usuario
+            {
+                Nome = "admin",
+                PasswordHash = Argon2Helper.GerarHash("admin") // Hasheando a senha para o BD
+            };
+            await usuarioRepo.CadastrarUsuarioAsync(usuarioAdmin);
+            AnsiConsole.MarkupLine("[yellow]Primeira execução detectada: Usuário 'admin' criado com a senha 'admin'.[/]\n");
+        }
 
         // 3. Orquestrando o Login
         var authService = serviceProvider.GetRequiredService<ServicoAutenticacao>();
