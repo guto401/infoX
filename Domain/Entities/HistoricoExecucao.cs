@@ -8,5 +8,12 @@ namespace Domain.Entities
         public DateTime DataExecucao { get; set; }
         public StatusEnum Status { get; set; }
         public string OutputLog { get; set; } = string.Empty;
+
+        public HistoricoExecucao(string nome, StatusEnum status, string resultado)
+        {
+            nome = NomeScript;
+            status = Status;
+            resultado = OutputLog;
+        }
     }
 }
