@@ -1,2 +1,2 @@
 # infoX
-Um software de gerenciamento completo para assistências técnicas em T.I.
+Meu pequeno programa para facilitar a vida dos técnicos de PC Windows
