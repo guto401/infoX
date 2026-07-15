@@ -1,8 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "Ft72OylRbK0=",
+  "dgSpecHash": "jXcDX8qyXv4=",
   "success": true,
   "projectFilePath": "C:\\Users\\augus\\OneDrive\\Documentos\\GitHub\\infoX\\ConsoleApp\\ConsoleApp.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\augus\\.nuget\\packages\\konscious.security.cryptography.argon2\\1.3.1\\konscious.security.cryptography.argon2.1.3.1.nupkg.sha512",
+    "C:\\Users\\augus\\.nuget\\packages\\konscious.security.cryptography.blake2\\1.1.1\\konscious.security.cryptography.blake2.1.1.1.nupkg.sha512",
+    "C:\\Users\\augus\\.nuget\\packages\\spectre.console\\0.57.2\\spectre.console.0.57.2.nupkg.sha512",
+    "C:\\Users\\augus\\.nuget\\packages\\spectre.console.ansi\\0.57.2\\spectre.console.ansi.0.57.2.nupkg.sha512",
+    "C:\\Users\\augus\\.nuget\\packages\\microsoft.windows.sdk.net.ref\\10.0.17763.57\\microsoft.windows.sdk.net.ref.10.0.17763.57.nupkg.sha512"
+  ],
   "logs": []
 }
