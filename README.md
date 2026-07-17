@@ -30,4 +30,4 @@ O projeto adota os conceitos de **Onion Architecture** (Arquitetura Cebola) para
 * **Arquitetura Reutilizável:** Camadas internas estruturadas de forma independente (`Application` e `Infrastructure`), permitindo que este mesmo motor de automação seja facilmente portado para um **Worker Service** (Agente RMM em background) no futuro.
 
 ---
- desenvolvido por **[@guto_marmiroli](https://github.com/guto_marmiroli)**
+ desenvolvido por **[github](https://github.com/guto401)** **[instagram](https://www.instagram.com/guto_marmiroli)** 
