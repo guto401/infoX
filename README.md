@@ -1,48 +1,32 @@
 # 🛠️ InfoX — Sistema de Automação e Suporte Tático
 
-![GitHub Repo stars](https://img.shields.io/github/stars/guto_marmiroli/infoX?style=for-the-badge)
-![.NET Version](https://img.shields.io/badge/.NET-10.0-512BD4?style=for-the-badge&logo=dotnet)
-![Architecture](https://img.shields.io/badge/Architecture-Onion-ff69b4?style=for-the-badge)
-![OS Target](https://img.shields.io/badge/Platform-Windows-0078D6?style=for-the-badge&logo=windows)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+📌 Utilitário avançado de infraestrutura, automação de rotinas e suporte de TI.
 
-O **InfoX** é um utilitário interativo de console focado em automação, suporte tático e gerenciamento de infraestrutura de TI. Desenvolvido como **Trabalho de Conclusão de Curso (TCC)**, o projeto utiliza conceitos avançados de engenharia de software para oferecer um console de alto desempenho para técnicos de campo e administradores de sistemas.
+![.NET](https://img.shields.io/badge/.NET%2010-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![C#](https://img.shields.io/badge/C%23-239120?style=flat-square&logo=csharp&logoColor=white)
+![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
+![PowerShell](https://img.shields.io/badge/PowerShell-5391FE?style=for-the-badge&logo=powershell&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 
----
-
-## 🧠 Arquitetura e Engenharia do Sistema
-
-O InfoX adota a **Onion Architecture** (Arquitetura Cebola) para garantir total desacoplamento entre as regras de negócio e a infraestrutura, facilitando a portabilidade do motor de automação para futuros agentes (como serviços RMM em background).
-
-### O Segredo: Orquestração Híbrida
-O sistema resolve o problema clássico de balancear flexibilidade lógica com controle de sistema operacional dividindo a execução em duas frentes:
-
-1. **O Cérebro (C# + Roslyn):** A aplicação lê scripts físicos `.cs` dinamicamente de um diretório local. Utilizando o compilador **Roslyn** em tempo real (`CSharpScript.EvaluateAsync`), o sistema processa lógicas complexas de negócio diretamente na memória RAM, resolve variáveis dinâmicas e monta os comandos necessários. O histórico de logs é persistido localmente via **SQLite**.
-2. **O Músculo (PowerShell):** Uma string limpa de comandos puros é enviada ao componente isolado `IExecutorBurro`. Este componente dispara uma instância oculta do `powershell.exe` forçando a comunicação em **UTF-8**, executando tarefas pesadas a nível de sistema operacional (downloads de ferramentas, varreduras de vírus, limpezas, etc.) e reportando o output em tempo real.
+O **InfoX** é um console interativo desenvolvido para administradores de sistemas e técnicos de campo executarem diagnósticos, automações e manutenções de forma centralizada, segura e com alto desempenho.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas (Stack)
+## 🧠 Engenharia e Orquestração Híbrida
 
-* **Plataforma:** .NET 10 (C#)
-* **Interface de Console:** Spectre.Console (Criação de menus ricos, spinners assíncronos e tabelas responsivas)
-* **Compilação Dinâmica:** Microsoft.CodeAnalysis.CSharp.Scripting (Roslyn)
-* **Banco de Dados:** SQLite (Via Entity Framework Core) para auditoria e logs de execução
-* **Interpretador de Infraestrutura:** Windows PowerShell (Processos filhos assíncronos monitorados)
+O projeto adota os conceitos de **Onion Architecture** (Arquitetura Cebola) para desacoplar as regras de negócio dos componentes de infraestrutura, operando através de um motor de execução híbrido:
 
----
-
-## 🚀 Recursos Implementados
-
-* **Gerenciamento de Cancelamento Seguro:** Suporte nativo a `CancellationToken`. Se o usuário interromper uma operação com `Ctrl+C`, o motor dispara um encerramento cirúrgico que liquida toda a árvore de processos filhos do PowerShell, impedindo que tarefas invisíveis continuem rodando como "zumbis".
-* **Saída Impecável (UTF-8):** Aplicação de uma "mordaça" na sessão do PowerShell para forçar a codificação em UTF-8, eliminando a quebra de acentuações em ambientes de MS-DOS legados.
-* **Resiliência de Inicialização:** Sistema inteligente no `Program.cs` que gera automaticamente o diretório de `Scripts` se ele não existir e pausa a execução com alertas visuais caso esteja vazio, blindando o componente do Spectre Console contra quebras violentas.
+1. **O Cérebro (C# + Roslyn):** O sistema lê dinamicamente arquivos de script `.cs` locais e usa o compilador **Roslyn** (`CSharpScript.EvaluateAsync`) para processar lógicas complexas diretamente na memória RAM, injetar variáveis e estruturar o fluxo de trabalho. Os históricos de execução e logs são persistidos localmente via **SQLite**.
+2. **O Músculo (PowerShell):** Uma interface isolada (`IExecutorBurro`) recebe os comandos prontos e dispara sessões ocultas do `powershell.exe`. O motor força nativamente a comunicação em **UTF-8**, eliminando erros de acentuação no console enquanto realiza tarefas pesadas a nível de sistema operacional.
 
 ---
 
-## 📦 Como Compilar e Publicar (Publish)
+## ⚙️ Recursos Principais
 
-Para gerar um utilitário tático independente e portátil (pronto para rodar a partir de um pendrive em computadores de clientes sem a necessidade do .NET Runtime instalado), utilize o comando de publicação direcionado para o projeto de console:
+* **Interface Avançada:** Implementação com `Spectre.Console` para menus dinâmicos, tabelas limpas e indicadores visuais assíncronos (spinners) no terminal.
+* **Cancelamento Seguro (Ctrl+C):** Gerenciamento preciso via `CancellationToken`. Caso a operação seja abortada, o sistema encerra cirurgicamente toda a árvore de processos filhos do PowerShell, evitando processos "zumbis" em background.
+* **Resiliência de Inicialização:** Mecanismo inteligente que cria a pasta de `Scripts` caso não exista e pausa a execução com alertas visuais amigáveis se o diretório estiver vazio, blindando o terminal contra falhas.
+* **Arquitetura Reutilizável:** Camadas internas estruturadas de forma independente (`Application` e `Infrastructure`), permitindo que este mesmo motor de automação seja facilmente portado para um **Worker Service** (Agente RMM em background) no futuro.
 
-```bash
-dotnet publish ConsoleApp -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+---
+ desenvolvido por **[@guto_marmiroli](https://github.com/guto_marmiroli)**
