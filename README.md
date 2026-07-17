@@ -2,8 +2,9 @@
 
 📌 Utilitário avançado de infraestrutura, automação de rotinas e suporte de TI.
 
+![GitHub](https://img.shields.io/badge/GitHub-8A2BE2?logo=github&logoColor=white)
 ![.NET](https://img.shields.io/badge/.NET_10-512BD4?style=flat&logo=dotnet&logoColor=white)
-![C#](https://img.shields.io/badge/C%23-239120?style=flat&logo=microsoftcsharp&logoColor=white)
+![Entity Framework Core](https://img.shields.io/badge/EF%20Core-5C2D91?logo=dotnet&logoColor=white)
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=flat&logo=windows&logoColor=white)
 ![PowerShell](https://img.shields.io/badge/PowerShell-5391FE?style=flat&logo=powershell&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white)
