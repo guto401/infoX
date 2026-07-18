@@ -44,7 +44,7 @@ public class ExecutorPowerShell : IExecutorBurro
             if (e.Data != null)
             {
                 outputCompleto.AppendLine($"[ERRO]: {e.Data}");
-                onLineRead?.Invoke($"[red][ERRO]: {e.Data}[/]"); // Formatação de cor Spectre
+                onLineRead?.Invoke($"[ERRO]: {e.Data}"); 
             }
         };
 

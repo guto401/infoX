@@ -4,6 +4,7 @@ using Domain.Entities;
 using Domain.Enums;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Spectre.Console;
 
 namespace Application.UseCases;
 
@@ -52,15 +53,29 @@ public class GerenciadorScripts
 
         try
         {
-            // Ensinamos o Roslyn a reconhecer os comandos de Sistema e Pastas
+            // Ensinamos o Roslyn a reconhecer dlls e dependências
             var opcoes = ScriptOptions.Default
-                .AddReferences(typeof(System.IO.Path).Assembly, typeof(AppContext).Assembly)
-                .AddImports("System", "System.IO");
+                .AddReferences(
+                    typeof(System.IO.Path).Assembly,
+                    typeof(AppContext).Assembly,
+                    typeof(AnsiConsole).Assembly
+                )
+                .AddImports(
+                    "System",
+                    "System.IO",
+                    "Spectre.Console"
+                );
 
-            // Executamos com as opções
+            // O Roslyn executa o C# na memória e captura estritamente o valor do 'return
             string comandoPowershell = await CSharpScript.EvaluateAsync<string>(conteudoScript, opcoes);
 
-            // Passa para o executor burro rodar no PowerShell
+            // Se o usuário escolher cancelar dentro do sub-menu do script, tratamos aqui
+            if (string.IsNullOrWhiteSpace(comandoPowershell) || comandoPowershell == "VOLTAR")
+            {
+                return "[AVISO]: Operação cancelada no sub-menu.";
+            }
+
+            // Passa a string retornada para o executor burro rodar no PowerShell
             resultado = await _executor.ExecutarAsync(comandoPowershell, onLineRead);
 
             if (resultado.Contains("[ERRO]") || resultado.Contains("[Exception]"))
