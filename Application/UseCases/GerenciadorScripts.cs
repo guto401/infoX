@@ -21,6 +21,7 @@
 // =============================================================================
 
 using Application.Interfaces;
+using Domain.Interfaces;
 using Application.Models;
 using Domain.Entities;
 using Domain.Enums;

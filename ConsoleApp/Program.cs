@@ -21,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 using Application.UseCases;
 using Application.Interfaces;
+using Domain.Interfaces;
 using Infrastructure.Context;
 using Infrastructure.Repositories;
 using Infrastructure.Services;

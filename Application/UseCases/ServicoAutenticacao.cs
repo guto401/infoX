@@ -17,7 +17,7 @@
 
 using Application.Security;
 using Domain.Entities;
-using Application.Interfaces;
+using Domain.Interfaces;
 
 namespace Application.UseCases;
 

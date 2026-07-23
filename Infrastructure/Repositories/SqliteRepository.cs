@@ -21,7 +21,7 @@
 //   services.AddScoped<IHistoricoRepository, SqliteRepository>();
 // =============================================================================
 
-using Application.Interfaces;
+using Domain.Interfaces;
 using Domain.Entities;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
