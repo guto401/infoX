@@ -39,20 +39,12 @@ namespace Domain.Entities
         // explicada em Usuario.cs).
         public HistoricoExecucao() { }
 
-        // Construtor de conveniência.
-        //
-        // ⚠️ BUG AQUI — EXERCÍCIO PARA VOCÊ CORRIGIR:
-        // Mesmo problema do Usuario.cs — as atribuições estão invertidas.
-        // Os parâmetros recebem os valores das propriedades vazias,
-        // em vez das propriedades receberem os valores dos parâmetros.
-        //
-        // Corrija seguindo o mesmo raciocínio: a PROPRIEDADE fica à esquerda
-        // do sinal de igual, o PARÂMETRO fica à direita.
+        // Construtor de conveniência
         public HistoricoExecucao(string nome, StatusEnum status, string resultado)
         {
-            nome = NomeScript;   // ❌ ERRADO
-            status = Status;     // ❌ ERRADO
-            resultado = OutputLog; // ❌ ERRADO
+            NomeScript = nome;  
+            Status = status;    
+            OutputLog = resultado; 
         }
     }
 }

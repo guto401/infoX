@@ -34,19 +34,10 @@ namespace Domain.Entities
         public Usuario() { }
 
         // Construtor de conveniência para criar um usuário já preenchido.
-        //
-        // ⚠️ BUG AQUI — EXERCÍCIO PARA VOCÊ CORRIGIR:
-        // As atribuições abaixo estão invertidas. O parâmetro recebe o valor
-        // da propriedade (que está vazia), em vez de a propriedade receber
-        // o valor do parâmetro. Este construtor é atualmente um "no-op" —
-        // ele não faz nada de útil.
-        //
-        // Dica: em C#, "Nome = nome" significa "coloque o valor de 'nome'
-        // dentro da propriedade 'Nome'". A propriedade SEMPRE fica à esquerda.
         public Usuario(string nome, string passwordHash)
         {
-            nome = Nome;         // ❌ ERRADO
-            passwordHash = PasswordHash; // ❌ ERRADO
+            Nome = nome;         
+            PasswordHash = passwordHash;
         }
     }
 }
