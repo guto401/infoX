@@ -46,5 +46,10 @@ namespace Domain.Entities
             Status = status;    
             OutputLog = resultado; 
         }
+
+        public HistoricoExecucao(HistoricoExecucao historicoExecucao)
+        {
+
+        }
     }
 }

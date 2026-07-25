@@ -167,6 +167,7 @@ public class GerenciadorScripts
             // de qualquer outra exceção inesperada.
             status = StatusEnum.Erro;
             resultado = $"[FALHA NA EXECUÇÃO]: {ex.Message}";
+            return resultado;
         }
         finally
         {

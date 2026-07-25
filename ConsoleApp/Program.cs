@@ -27,8 +27,6 @@ using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Application.Models;
 using Microsoft.EntityFrameworkCore;
-using Domain.Entities;
-using Application.Security;
 
 using System.Diagnostics;
 using System.Security.Principal;
@@ -116,6 +114,7 @@ class Program
         services.AddScoped<IUsuarioRepository, SqliteRepository>();
         services.AddScoped<IHistoricoRepository, SqliteRepository>();
         services.AddScoped<IExecutorBurro, ExecutorPowerShell>();
+        services.AddScoped<IPasswordHasher, Argon2PasswordHasher>();
 
         // Use Cases são registrados diretamente (sem interface), pois o Program.cs
         // os referencia diretamente para orquestrar o fluxo.
@@ -141,37 +140,13 @@ class Program
         AnsiConsole.WriteLine();
 
         // =====================================================================
-        // ETAPA 5: BOOTSTRAP DO USUÁRIO ADMIN
-        // =====================================================================
-        // Na primeira execução, o banco está vazio. Criamos o admin padrão
-        // para que o sistema não fique inacessível.
-
-        // GetRequiredService<T> recupera o serviço do container.
-        // Se o serviço não estiver registrado, lança uma exceção clara.
-        var usuarioRepo = serviceProvider.GetRequiredService<IUsuarioRepository>();
-        bool temUsuario = await usuarioRepo.ExisteAlgumUsuarioAsync();
-
-        if (!temUsuario)
-        {
-            // Object initializer — cria e inicializa as propriedades em uma expressão.
-            // Note que este trecho USA O OBJECT INITIALIZER corretamente,
-            // ao contrário do construtor parametrizado de Usuario (que tem o bug).
-            var usuarioAdmin = new Usuario
-            {
-                Nome = "admin",
-                PasswordHash = Argon2Helper.GerarHash("admin")
-            };
-            await usuarioRepo.CadastrarUsuarioAsync(usuarioAdmin);
-            AnsiConsole.MarkupLine("[yellow]Primeira execução detectada: Usuário 'admin' criado com a senha 'admin'.[/]\n");
-        }
-
-        // =====================================================================
         // ETAPA 6: LOOP DE AUTENTICAÇÃO
         // =====================================================================
         // Mantém o prompt de login até que as credenciais sejam válidas.
         // Não há limite de tentativas — adicionar um lockout seria uma melhoria futura.
 
         var authService = serviceProvider.GetRequiredService<ServicoAutenticacao>();
+        //await authService.CadastroUsuarioAsync(new CadastroUsuarioDto { Nome = "admin", Senha = "admin" });
         bool autenticado = false;
 
         while (!autenticado)

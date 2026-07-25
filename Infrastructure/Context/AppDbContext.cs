@@ -44,9 +44,8 @@ public class AppDbContext : DbContext
         // O correto seria usar AppContext.BaseDirectory para sempre criar o banco
         // no mesmo diretório do .exe, consistente com a pasta Scripts/:
         //
-        //   var dbPath = Path.Combine(AppContext.BaseDirectory, "infoX.db");
-        //   optionsBuilder.UseSqlite($"Data Source={dbPath}");
-        optionsBuilder.UseSqlite("Data Source=infoX.db");
+        var dbPath = Path.Combine(AppContext.BaseDirectory, "infoX.db");
+        optionsBuilder.UseSqlite($"Data Source={dbPath}");
     }
 
     // Configurações do modelo de dados — como as entidades mapeiam para tabelas.

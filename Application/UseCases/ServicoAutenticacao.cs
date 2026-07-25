@@ -15,7 +15,8 @@
 // concretas — isso é o princípio D do SOLID (Dependency Inversion Principle).
 // =============================================================================
 
-using Application.Security;
+using Application.Interfaces;
+using Application.Models;
 using Domain.Entities;
 using Domain.Interfaces;
 
@@ -28,15 +29,17 @@ public class ServicoAutenticacao
     // SqliteRepository, um repositório em memória para testes, ou um futuro
     // repositório que consulte uma API remota.
     private readonly IUsuarioRepository _usuarioRepository;
+    private readonly IPasswordHasher _iPasswordHasher;
 
     // CONCEITO — Injeção de Dependência (Constructor Injection):
     // Em vez de criar o repositório aqui com "new SqliteRepository()",
     // recebemos ele pronto pelo construtor. Quem "injeta" a dependência
     // é o container de DI configurado no Program.cs.
     // Vantagem: este serviço não precisa saber como o repositório é criado.
-    public ServicoAutenticacao(IUsuarioRepository usuarioRepository)
+    public ServicoAutenticacao(IUsuarioRepository usuarioRepository, IPasswordHasher iPasswordHasher)
     {
         _usuarioRepository = usuarioRepository;
+        _iPasswordHasher = iPasswordHasher;
     }
 
     // Tenta autenticar o usuário com nome e senha fornecidos.
@@ -58,10 +61,21 @@ public class ServicoAutenticacao
         // Se o usuário não foi encontrado, nega o acesso imediatamente.
         if (usuario == null) return false;
 
-        // Delega a comparação de senha para o Argon2Helper.
+        // Delega a comparação de senha para o _iPasswordHasher.
         // Note que não acessamos "usuario.PasswordHash" fora do domínio de
         // segurança — passamos para quem sabe lidar com isso.
-        return Argon2Helper.VerificarSenha(senha, usuario.PasswordHash);
+        return _iPasswordHasher.VerificarSenha(senha, usuario.PasswordHash);
+    }
+
+    public async Task CadastroUsuarioAsync(CadastroUsuarioDto dto)
+    {
+        var hash = _iPasswordHasher.GerarHash(dto.Senha);
+        var novoUsuario = new Usuario
+        {
+            Nome = dto.Nome,
+            PasswordHash = hash
+        };
+        await _usuarioRepository.CadastrarUsuarioAsync(novoUsuario);
     }
 
     // Método privado de "bootstrap": cria o usuário admin com senha "admin"
@@ -72,14 +86,7 @@ public class ServicoAutenticacao
     {
         if (!await _usuarioRepository.ExisteAlgumUsuarioAsync())
         {
-            var senhaHash = Argon2Helper.GerarHash("admin");
-
-            // ⚠️ ATENÇÃO: este construtor parametrizado tem um bug (veja Usuario.cs).
-            // Por causa do bug, o objeto criado aqui tem Nome="" e PasswordHash="".
-            // O CadastrarUsuarioAsync salva um usuário inútil no banco.
-            // Corrija o construtor em Usuario.cs e o bug some automaticamente.
-            var usuarioPadrao = new Usuario("admin", senhaHash);
-            await _usuarioRepository.CadastrarUsuarioAsync(usuarioPadrao);
+            await CadastroUsuarioAsync(new CadastroUsuarioDto { Nome = "admin", Senha = "1234" });
         }
     }
 }
