@@ -6,11 +6,17 @@ namespace Infrastructure.Services;
 
 public class ExecutorPowerShell : IExecutorBurro
 {
-    public async Task<string> ExecutarAsync(string scriptConteudo, Action<string>? onLineRead = null)
+    public async Task<string> ExecutarAsync(
+        string scriptConteudo, 
+        Action<string>? onLineRead = null,
+        CancellationToken ct = default
+    )
     {
         if (string.IsNullOrWhiteSpace(scriptConteudo))
             return "Script vazio.";
 
+        ct.ThrowIfCancellationRequested();
+        
         var processInfo = new ProcessStartInfo
         {
             FileName = "powershell.exe",
@@ -44,14 +50,28 @@ public class ExecutorPowerShell : IExecutorBurro
             }
         };
 
+        using var registration = ct.Register(() =>  {
+            try
+            {
+                if (!process.HasExited)
+                    process.Kill(entireProcessTree: true);
+            }
+            catch{ }
+        });
+
         try
         {
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
-            await process.WaitForExitAsync();
+            await process.WaitForExitAsync(ct);
 
             return outputCompleto.ToString();
+        }
+        catch (OperationCanceledException)
+        {
+            outputCompleto.AppendLine("\n[ALERTA]: Execução do processo PowerShell cancelada pelo usuário.");
+            throw;
         }
         catch (Exception ex)
         {

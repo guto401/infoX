@@ -39,7 +39,11 @@ public class GerenciadorScripts
         });
     }
 
-    public async Task<string> ExecutarScriptFisicoAsync(string nomeArquivo, Action<string>? onLineRead = null)
+    public async Task<string> ExecutarScriptFisicoAsync(
+        string nomeArquivo,
+        Action<string>? onLineRead = null,
+        CancellationToken ct = default
+    )
     {
         string caminhoCompleto = Path.Combine(_diretorioScripts, nomeArquivo);
 
@@ -52,6 +56,8 @@ public class GerenciadorScripts
 
         try
         {
+            ct.ThrowIfCancellationRequested();
+
             var opcoes = ScriptOptions.Default
                 .AddReferences(
                     typeof(System.IO.Path).Assembly,
@@ -64,24 +70,33 @@ public class GerenciadorScripts
                     "Spectre.Console"
                 );
 
-            string comandoPowershell = await CSharpScript.EvaluateAsync<string>(conteudoScript, opcoes);
+            string comandoPowershell = await CSharpScript.EvaluateAsync<string>(
+                conteudoScript,
+                opcoes,
+                cancellationToken: ct
+            );
 
             if (string.IsNullOrWhiteSpace(comandoPowershell) || comandoPowershell == "VOLTAR")
             {
                 return "[AVISO]: Operação cancelada no sub-menu.";
             }
 
-            resultado = await _executor.ExecutarAsync(comandoPowershell, onLineRead);
+            resultado = await _executor.ExecutarAsync(comandoPowershell, onLineRead, ct);
 
             if (resultado.Contains("[ERRO]") || resultado.Contains("[Exception]"))
             {
                 status = StatusEnum.Erro;
             }
         }
+        catch (OperationCanceledException)
+        {
+            status = StatusEnum.Cancelado;
+            resultado += "\n[CANCELADO]: A execução foi interrompida pelo usuário(ESC).";
+        }
         catch (Exception ex)
         {
             status = StatusEnum.Erro;
-            resultado = $"[FALHA NA EXECUÇÃO]: {ex.Message}";
+            resultado += $"[FALHA NA EXECUÇÃO]: {ex.Message}";
             return resultado;
         }
         finally

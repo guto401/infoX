@@ -138,14 +138,56 @@ class Program
                 AnsiConsole.MarkupLine($"[grey]>[/] {Markup.Escape(linha)}");
             };
 
-            await AnsiConsole.Status()
-                .Spinner(Spinner.Known.Dots)
-                .StartAsync("Aguardando processo...", async ctx =>
-                {
-                    ctx.Status("Processando script no Windows...");
+            using var cts = new CancellationTokenSource();
+            using var keyMonitorCts = new CancellationTokenSource();
 
-                    await gerenciador.ExecutarScriptFisicoAsync(scriptEscolhido.NomeArquivo, printarLinhaTempoReal);
-                });
+            var monitorTecla = Task.Run(() =>
+            {
+                while (!keyMonitorCts.Token.IsCancellationRequested)
+                {
+                    if (Console.KeyAvailable)
+                    {
+                        var tecla = Console.ReadKey(intercept: true);
+                        if (tecla.Key == ConsoleKey.Escape)
+                        {
+                            cts.Cancel();
+                            break;
+                        }
+                    }
+                    Thread.Sleep(50);
+                }
+            }, keyMonitorCts.Token);
+
+            ConsoleCancelEventHandler cancelHandler = (_, e) =>
+            {
+                e.Cancel = true;
+                cts.Cancel();
+            };
+            Console.CancelKeyPress += cancelHandler;
+
+            try
+            {
+                await AnsiConsole.Status()
+                    .Spinner(Spinner.Known.Dots)
+                    .StartAsync("Aguardando processo...", async ctx =>
+                    {
+                        ctx.Status("Processando script no Windows... (ESC ou Ctrl+C para cancelar)");
+
+                        await gerenciador.ExecutarScriptFisicoAsync(
+                            scriptEscolhido.NomeArquivo,
+                            printarLinhaTempoReal,
+                            cts.Token);
+                    });
+            }
+            catch (OperationCanceledException)
+            {
+                AnsiConsole.MarkupLine("\n[yellow]Execução cancelada pelo usuário.[/]");
+            }
+            finally
+            {
+                keyMonitorCts.Cancel();
+                Console.CancelKeyPress -= cancelHandler;
+            }
 
             AnsiConsole.WriteLine();
             AnsiConsole.Write(new Rule("[green]Execução Finalizada[/]").LeftJustified());
