@@ -169,17 +169,10 @@ class Program
 
             try
             {
-                await AnsiConsole.Status()
-                    .Spinner(Spinner.Known.Dots)
-                    .StartAsync("Aguardando processo...", async ctx =>
-                    {
-                        ctx.Status("Processando script no Windows... (ESC ou Ctrl+C para cancelar)");
-
-                        resultadoExecucao = await gerenciador.ExecutarScriptFisicoAsync(
-                            scriptEscolhido.NomeArquivo,
-                            printarLinhaTempoReal,
-                            cts.Token);
-                    });
+                resultadoExecucao = await gerenciador.ExecutarScriptFisicoAsync(
+                    scriptEscolhido.NomeArquivo,
+                    printarLinhaTempoReal,
+                    cts.Token);
 
                 if (!string.IsNullOrWhiteSpace(resultadoExecucao))
                 {
