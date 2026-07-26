@@ -6,7 +6,7 @@
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<Version>1.2.5</Version>
+	<Version>1.3.0</Version>
 	<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
 	<SatelliteResourceLanguages>pt-BR</SatelliteResourceLanguages>
   </PropertyGroup>
