@@ -165,6 +165,8 @@ class Program
             };
             Console.CancelKeyPress += cancelHandler;
 
+            string resultadoExecucao = string.Empty;
+
             try
             {
                 await AnsiConsole.Status()
@@ -173,11 +175,25 @@ class Program
                     {
                         ctx.Status("Processando script no Windows... (ESC ou Ctrl+C para cancelar)");
 
-                        await gerenciador.ExecutarScriptFisicoAsync(
+                        resultadoExecucao = await gerenciador.ExecutarScriptFisicoAsync(
                             scriptEscolhido.NomeArquivo,
                             printarLinhaTempoReal,
                             cts.Token);
                     });
+
+                if (!string.IsNullOrWhiteSpace(resultadoExecucao))
+                {
+                    AnsiConsole.WriteLine();
+                    if (resultadoExecucao.Contains("[FALHA NA EXECUÇÃO]"))
+                    {
+                        AnsiConsole.Write(new Rule("[red]Erro na Execução do Script[/]").LeftJustified());
+                        AnsiConsole.MarkupLine($"[red]{Markup.Escape(resultadoExecucao)}[/]");
+                    }
+                    else if (resultadoExecucao.StartsWith("[AVISO]") || resultadoExecucao.Contains("[CANCELADO]"))
+                    {
+                        AnsiConsole.MarkupLine($"[yellow]{Markup.Escape(resultadoExecucao)}[/]");
+                    }
+                }
             }
             catch (OperationCanceledException)
             {
