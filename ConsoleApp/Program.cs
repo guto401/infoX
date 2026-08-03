@@ -111,7 +111,7 @@ class Program
 
             var scriptEscolhido = AnsiConsole.Prompt(
                 new SelectionPrompt<ScriptLido>()
-                    .Title("[bold deepskyblue1]Scripts Disponíveis[/]\n[grey]([cyan]↑/↓[/] navegar • digite para buscar • [cyan]Enter[/] confirmar)[/]\n")
+                    .Title("[bold deepskyblue1]Scripts Disponíveis[/]\n[grey]([cyan]↑/↓[/] navegar • digite para buscar • [cyan]Enter[/] confirmar)[/]")
                     .PageSize(pageSize)
                     .EnableSearch()
                     .UseConverter(s => s.NomeArquivo == "Sair" ? "[red]Sair do Sistema[/]" : s.NomeAmigavel)
