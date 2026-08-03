@@ -114,11 +114,14 @@ class Program
             var opcaoSair = new ScriptLido { NomeArquivo = "Sair", CaminhoCompleto = "" };
             scripts.Add(opcaoSair);
 
+            int pageSize = Math.Clamp(Console.WindowHeight - 8, 5, 25);
+
             var scriptEscolhido = AnsiConsole.Prompt(
                 new SelectionPrompt<ScriptLido>()
-                    .Title("Selecione o script para execução (Use as setas):")
-                    .PageSize(10)
-                    .MoreChoicesText("[grey](Mova para cima/baixo para ver mais)[/]")
+                    .Title("Selecione o script para execução:\n[grey](Use as setas [cyan]↑/↓[/] para navegar, digite para buscar e [cyan]Enter[/] para confirmar)[/]")
+                    .PageSize(pageSize)
+                    .MoreChoicesText("[grey](Mova para cima/baixo para ver mais opções...)[/]")
+                    .EnableSearch()
                     .UseConverter(s => s.NomeArquivo == "Sair" ? "[red]Sair do Sistema[/]" : s.NomeAmigavel)
                     .AddChoices(scripts)
             );
